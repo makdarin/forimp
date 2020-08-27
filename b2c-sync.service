@@ -1,0 +1,21 @@
+[Unit]
+Description=Node.js B2C Sync App Server
+#Requires=After=mysql.service       # Requires the mysql service to run first
+
+[Service]
+ExecStart=/opt/node/node/bin/node /opt/sync/server.js
+# Required on some systems
+#WorkingDirectory=/opt/sync
+Restart=always
+# Restart service after 10 seconds if node service crashes
+RestartSec=10
+# Output to syslog
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=b2c-sync
+#User=<alternate user>
+#Group=<alternate group>
+Environment=NODE_ENV=production PORT=7085
+
+[Install]
+WantedBy=multi-user.target
