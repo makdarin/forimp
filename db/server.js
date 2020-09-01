@@ -529,40 +529,136 @@ server.del('/deleteAllProducts', bodyParser(), function(req, res) {
         return res.json(200, { success: true});
     });
 });
-
-//change data for order
-server.post('/brands/:id', bodyParser(), function (req, res, next) {
+//add Brands
+server.post('/brands/:id', bodyParser(), function(req, res, next){
     res.header("Access-Control-Allow-Origin", "*");
     res.header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    var brandId = req.params.id;
-    var date_ = Date.now();
-    var date = dateFormat(date_, "yyyy-mm-dd h:MM:ss");
-    console.log('update/add brand:' + brandId)
-    console.log(req.body)
-    connection.query("Select * From Brands", [], function (err, tmpres) {
-        if (err) return res.json(500, err);
-        return res.json(200, { success: false});
-    })
 
-});
+    const id = req.params.id;
+    const reqbody = req.body;
+    console.log(id)
 
-//change data for order
-server.post('/categories/:id', bodyParser(), function (req, res, next) {
+    const date_ = Date.now();
+    const date = dateFormat(date_, "yyyy-mm-dd h:MM:ss");
+
+    // const insertbody = [reqbody.name, reqbody.desc, reqbody.tag, reqbody.note, reqbody.country, reqbody.url, reqbody.logo, reqbody.img];
+    // const updatebody = [reqbody.name, reqbody.desc, reqbody.tag, reqbody.note, reqbody.country, reqbody.url, reqbody.logo, reqbody.img, id];
+
+    const insertbody = [id, reqbody.name, reqbody.desc, null, reqbody.note, reqbody.country, reqbody.url, reqbody.logo, reqbody.img, date, date];
+    const updatebody = [reqbody.name, reqbody.desc, null, reqbody.note, reqbody.country, reqbody.url, reqbody.logo, reqbody.img, date, id];
+    connection.query("SELECT * FROM Brands WHERE BrandID = ?", [id], function (err, tmpres) {
+        if (err) {
+            console.log("query failed!" + err)
+            res.json({success: false});
+        }
+        if( tmpres.length !== 0 ){
+            connection.query("UPDATE Brands SET BrandName=?, Description=?, Tag=?, Notes=?, Country=?, URL=?, Logo=?, Img=?, updatedAt=? WHERE BrandID=?", updatebody,
+                function(err, r){
+                    if( err ) {
+                        console.log(err);
+                        res.json({success: false});
+                    }
+                    res.json({success: true});
+                })
+        } else {
+            connection.query("INSERT INTO Brands (BrandID, BrandName, Description, Tag, Notes, Country, URL, Logo, Img, createdAt, updatedAt) VALUES (?)", [insertbody],
+                function(err, r){
+                    if( err ){
+                        console.log(err);
+                        res.json({success: false});
+                    }
+                    res.json({success: true});
+                })
+        }
+    });
+})
+
+//add Category
+server.post('/categories/:id', bodyParser(), function(req, res, next){
     res.header("Access-Control-Allow-Origin", "*");
     res.header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    var categoryId = req.params.id;
-    var date_ = Date.now();
-    var date = dateFormat(date_, "yyyy-mm-dd h:MM:ss");
-    console.log('update/add category:' + categoryId)
-    console.log(req.body)
-    connection.query("Select * From Categories", [], function (err, tmpres) {
-        if (err) return res.json(500, err);
-        return res.json(200, { success: false});
-    })
+    const id = req.params.id;
+    const reqbody = req.body;
 
-});
+    const date_ = Date.now();
+    const date = dateFormat(date_, "yyyy-mm-dd h:MM:ss");
+
+    // const insertbody = [reqbody.name, reqbody.slug, reqbody.desc, reqbody.tag, reqbody.picture, reqbody.active];
+    // const updatebody = [reqbody.name, reqbody.slug, reqbody.desc, reqbody.tag, reqbody.picture, reqbody.active, id];
+
+    const insertbody = [id, reqbody.name, null, reqbody.desc, null, null, null, date, date];
+    const updatebody = [reqbody.name, null, reqbody.desc, null, null, null, date, id];
+
+    connection.query("SELECT * FROM Categories WHERE CategoryID = ?", [id], function (err, tmpres) {
+        if (err) {
+            console.log("query failed!" + err);
+            res.json({success: false});
+        }
+        if( tmpres.length !== 0 ){
+            connection.query("UPDATE Categories SET CategoryName=?, Slug=?, Description=?, Tag=?, Picture=?, Active=?, updatedAt=? WHERE CategoryID=?", updatebody,
+                function(err, r){
+                    if( err ) {
+                        console.log(err);
+                        res.json({success: false});
+                    }
+                    res.json({success: true});
+                })
+        } else {
+            connection.query("INSERT INTO Categories (CategoryID, CategoryName, Slug, Description, Tag, Picture, Active, createdAt, updatedAt) VALUES (?)", [insertbody],
+                function(err, r){
+                    if( err ){
+                        console.log(err);
+                        res.json({success: false});
+                    }
+                    res.json({success: true});
+                })
+        }
+    });
+})
+
+//add SubCategory
+server.post('/subCategories/:id', bodyParser(), function(req, res, next){
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    const id = req.params.id;
+    const reqbody = req.body;
+
+    const date_ = Date.now();
+    const date = dateFormat(date_, "yyyy-mm-dd h:MM:ss");
+
+
+    const insertbody = [id, reqbody.name, reqbody.desc, reqbody.categoryId, null, null, null, date, date];
+    const updatebody = [reqbody.name, reqbody.desc, reqbody.categoryId, null, null, null, date, id];
+
+    connection.query("SELECT * FROM Sub_Category WHERE SubCategoryID = ?", [id], function (err, tmpres) {
+        if (err) {
+            console.log("query failed!" + err);
+            res.json({success: false});
+        }
+        if( tmpres.length !== 0 ){
+            connection.query("UPDATE Sub_Category SET SubCategoryName=?, Description=?, CategoryID=?, Tag=?, Picture=?, Active=?, updatedAt=? WHERE SubCategoryID=?", updatebody,
+                function(err, r){
+                    if( err ) {
+                        console.log(err);
+                        res.json({success: false});
+                    }
+                    res.json({success: true});
+                })
+        } else {
+            connection.query("INSERT INTO Sub_Category (SubCategoryID, SubCategoryName, Description, CategoryID, Tag, Picture, Active, createdAt, updatedAt) VALUES (?)", [insertbody],
+                function(err, r){
+                    if( err ){
+                        console.log(err);
+                        res.json({success: false});
+                    }
+                    res.json({success: true});
+                })
+        }
+    });
+})
 
 //get brands
 server.get('/brands', function (req, res, next) {
