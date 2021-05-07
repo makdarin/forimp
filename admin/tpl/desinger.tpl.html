@@ -1,0 +1,66 @@
+<div ng-app="akva" ng-controller="DesignerController">
+    <h1>Дизайнерские решения</h1>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header" id="header">
+                    <div class="row" style="display: flex; padding-left: 20px; justify-content: space-between;">
+                        <div style="width: 100%;">
+                            <h3 class="box-title">Дизайн изображения</h3>
+                        </div>
+                        <input type="file" id="upload_photo" class="btn btn-primary btn-xl" style="margin-right: 20px;"
+                            onchange="angular.element(this).scope().photofileChanged(this)"
+                            accept="image" 
+                        />
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div id="parent-img" style="display: flex; justify-content: center;">
+                        <img ng-src="{{url}}" id="background_image"  width="100%" ng-click="handleImagePos($event)"/>
+                        
+                        <div ng-repeat="pos in position" style="position: absolute; width: 20px; height: 20px; background-color:#000; border-radius: 10px; opacity: .6; left:{{pos.X}}px; top:{{pos.Y}}px"></div>
+                        
+                    </div>
+                    <br />
+
+                    <table id="allItems" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Номер</th>
+                                <th>X-Место</a></th>
+                                <th>Y-Место</th>
+                                <th>Товар-SKU</th>
+                                <th>Цена</th>
+                                <th>Положение</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="cust in filtered = (data | orderBy : predicate :reverse)">
+                                <td>{{$index+1}}</td>
+                                <td>{{cust.posX}}</td>
+                                <td>{{cust.posY}}</td>
+                                <td><input type="text" ng-model="cust.sku" ng-change="handleSkuChange(cust.sku, $index)"/></td>
+                                <td>{{cust.price}}</td>
+                                <td><input ng-if="cust.checked" ng-model="cust.checked" type="checkbox" ng-checked="cust.checked"/></td>
+                                <td style="display: flex; justify-content: center; align-items: center;"><a ng-click="handleDelete($index)"><i class="glyphicon glyphicon-remove"></i></a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="row" style="display: flex; padding: 20px; justify-content: space-between; align-items: center;">
+                        <div class="col-md-2" style="display: flex; flex-direction: row; align-items: center;">Тип:
+                            <select ng-model="solutionType" class="form-control" style="margin-left: 10px;">
+                                <option>designer_solutions</option>
+                                <option>designer_solutions2</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2" style="display: flex; flex-direction: row; align-items: center;">Скидка:
+                            <input type="number" ng-model="discount" class="form-control" style="margin-left:10px; width: 60px;"/>%
+                        </div>
+                        <button class="btn btn-primary btn-ls" ng-click="fileUpload()" value="{{discount}}" >Сохранить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

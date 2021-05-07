@@ -1,0 +1,83 @@
+<div ng-app="wifi" ng-controller="GeoRulesController">
+    <h1>Geo Rules</h1>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <a href="#/geo-rules/new" class="btn btn-warning btn-sm pull-right">New one</a>
+                    <div class="row">
+                        <div class="col-md-2">Page Größe:
+                            <select ng-model="entryLimit" class="form-control">
+                                <option>5</option>
+                                <option>10</option>
+                                <option>20</option>
+                                <option>50</option>
+                                <option>100</option>
+                                <option>200</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">Filter:
+                            <input type="text" ng-model="search" ng-change="filter()" placeholder="Account suchen" class="form-control" />
+                        </div>
+                        <div class="col-md-4">
+                            <h5>Gefunden {{ filtered.length }} von {{ totalItems}}</h5>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span><span ng-if="recentLoading">loading</span>Page {{(currentPage )}} </span>
+                        <button class="btn btn-primary btn-xs" ng-class="{ 'disabled': currentPage <= 0 }" ng-click="setPage(currentPage - 1)"><span class="glyphicon glyphicon-chevron-left"></span></button>
+                        <button class="btn btn-primary btn-xs" ng-click="setPage(currentPage + 1)"><span class="glyphicon glyphicon-chevron-right"></span></button>
+                    </div>
+                    <div class="col-md-12" ng-show="filteredItems > 0">
+                        <div pagination="" page="currentPage" on-select-page="setPage(page)" boundary-links="true" total-items="filteredItems" items-per-page="entryLimit" class="pagination-small" previous-text="&laquo;" next-text="&raquo;"></div>
+                    </div>
+                    <br/>
+                    <br/>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="allFakeAccounts" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name
+                                    <ng-click="predicate='customerId'; reverse=!reverse"><i class="glyphicon glyphicon-sort"></i></a>
+                                </th>
+                                <th>Tag<a ng-click="predicate='username'; reverse=!reverse"><i class="glyphicon glyphicon-sort"></i></a> </th>
+                                <th>Type<a ng-click="predicate='serviceCodes'; reverse=!reverse"><i class="glyphicon glyphicon-sort"></i></a> </th>
+                                <th>Flags&nbsp;<a ng-click="predicate='lastUpdate'; reverse=!reverse"><i class="glyphicon glyphicon-sort"></i></a></th>
+                                <th>Circle&nbsp;<a ng-click="predicate='lastUpdate'; reverse=!reverse"><i class="glyphicon glyphicon-sort"></i></a></th>
+                                <th>TGs&nbsp;<a ng-click="predicate='lastUpdate'; reverse=!reverse"><i class="glyphicon glyphicon-sort"></i></a></th>
+                                <th>PGs &nbsp;<a ng-click="predicate='lastUpdate'; reverse=!reverse"><i class="glyphicon glyphicon-sort"></i></a></th>
+                                <th>Vertäge&nbsp;<a ng-click="predicate='lastUpdate'; reverse=!reverse"><i class="glyphicon glyphicon-sort"></i></a></th>
+                                <th style="width:5%">Editieren</th>
+                                <th style="width:5%">Löschen</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="rule in filtered = (rules | filter:search | orderBy : predicate :reverse) | startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit">
+                                <td>{{rule.name}}</td>
+                                <td>{{rule.tag}}</td>
+                                <td>{{rule.type}}</td>
+                                <td>{{rule.flags}}</td>
+                                <td>{{rule.circle}}</td>
+                                <td>{{rule.typegroups}}</td>
+                                <td>{{rule.partnergroups}}</td>
+                                <td>{{rule.contracts}}</td>
+                                <td class="action-column">
+                                    <button type="button" class="btn btn-warning btn-sm" ng-click="editAccount(rule.name)">Edit</button>
+                                </td>
+                                <td class="action-column">
+                                    <button type="button" class="btn btn-danger btn-sm" ng-click="deleteAccount(rule.name)">Del</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <!--</tfoot>-->
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+</div>

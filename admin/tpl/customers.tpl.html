@@ -1,0 +1,73 @@
+<div ng-app="wifi" ng-controller="CustomersController">
+    <h1>Зарегистрированные клиенты</h1>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Список клентов</h3>
+                    <div class="row">
+                        <div class="col-md-2">Размер страницы:
+                            <select ng-model="entryLimit" class="form-control">
+                                <option>5</option>
+                                <option>10</option>
+                                <option>20</option>
+                                <option>50</option>
+                                <option>100</option>
+                                <option>200</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">Фильтр:
+                            <input type="text" ng-model="search" ng-change="filter()" placeholder="Поиск клиента..." class="form-control" />
+                        </div>
+                        <div class="col-md-4">
+                            <h5>Найдено {{ filtered.length }} из {{ totalItems}} клиентов</h5>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span><span ng-if="recentLoading">загрузка</span>Страница {{(currentPage )}} </span>
+                        <button class="btn btn-primary btn-xs" ng-class="{ 'disabled': currentPage <= 0 }" ng-click="setPage(currentPage - 1)"><span class="glyphicon glyphicon-chevron-left"></span></button>
+                        <button class="btn btn-primary btn-xs" ng-click="setPage(currentPage + 1)"><span class="glyphicon glyphicon-chevron-right"></span></button>
+                    </div>
+                    <div class="col-md-12" ng-show="filteredItems > 0">
+                        <div pagination="" page="currentPage" on-select-page="setPage(page)" boundary-links="true" total-items="filteredItems" items-per-page="entryLimit" class="pagination-small" previous-text="&laquo;" next-text="&raquo;"></div>
+                    </div>
+                    <br />
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="allItems" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Имя&nbsp;<a ng-click="predicate='firstname'; reverse=!reverse"><i class="glyphicon glyphicon-sort"></i></a> </th>
+                                <th>Фамилия&nbsp;<a ng-click="predicate='lastname'; reverse=!reverse"><i class="glyphicon glyphicon-sort"></i></a></th>
+                                <th>Телефон&nbsp;<a ng-click="predicate='phone'; reverse=!reverse"><i class="glyphicon glyphicon-sort"></i></a></th>
+                                <th>Эл.адрес&nbsp;<a ng-click="predicate='email'; reverse=!reverse"><i class="glyphicon glyphicon-sort"></i></a></th>
+                                <th>Улица&nbsp;<a ng-click="predicate='shipStreet'; reverse=!reverse"><i class="glyphicon glyphicon-sort"></i></a></th>
+                                <th>Почтовый индекс&nbsp;<a ng-click="predicate='shipPostalCode'; reverse=!reverse"><i class="glyphicon glyphicon-sort"></i></a></th>
+                                <th>Город&nbsp;<a ng-click="predicate='shipCity'; reverse=!reverse"><i class="glyphicon glyphicon-sort"></i></a></th>
+                                <th>Создан&nbsp;<a ng-click="predicate='created'; reverse=!reverse"><i class="glyphicon glyphicon-sort"></i></a></th>
+                                <!-- <th style="width:5%">Редактировать</th> -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="cust in filtered = (customers | filter:search | orderBy : predicate :reverse) | startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit">
+                                <td>{{cust.firstname}}</td>
+                                <td>{{cust.lastname}}</td>
+                                <td>{{cust.phone}}</td>
+                                <td>{{cust.email}}</td>
+                                <td>{{cust.shipStreet}}</td>
+                                <td>{{cust.shipPostalCode}}</td>
+                                <td>{{cust.shipCity}}</td>
+                                <td>{{cust.created}}</td>
+                            </tr>
+                        </tbody>
+                        <!--</tfoot>-->
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+</div>

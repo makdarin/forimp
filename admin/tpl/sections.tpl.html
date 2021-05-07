@@ -1,0 +1,47 @@
+<div ng-app="akva" ng-controller="SectionsController">
+    <h1>Секции</h1>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Список секций</h3>
+                    <div class="col-md-12" ng-show="filteredItems > 0">
+                        <div pagination="" page="currentPage" on-select-page="setPage(page)" boundary-links="true" total-items="filteredItems" items-per-page="entryLimit" class="pagination-small" previous-text="&laquo;" next-text="&raquo;"></div>
+                    </div>
+                    <br />
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="allItems" class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>ID<a ng-click="predicate='id'; reverse=!reverse"><i class="glyphicon glyphicon-sort"></i></a> </th>
+                            <th>Key<a ng-click="predicate='name'; reverse=!reverse"><i class="glyphicon glyphicon-sort"></i></a></th>
+                            <th>Ua<a ng-click="predicate='ua'; reverse=!reverse"><i class="glyphicon glyphicon-sort"></i></a> </th>
+                            <th>Ru<a ng-click="predicate='ru'; reverse=!reverse"><i class="glyphicon glyphicon-sort"></i></a> </th>
+                            <th>En<a ng-click="predicate='en'; reverse=!reverse"><i class="glyphicon glyphicon-sort"></i></a> </th>
+                            <th>URL<a ng-click="predicate='url'; reverse=!reverse"><i class="glyphicon glyphicon-sort"></i></a> </th>
+                            <th>Создан&nbsp;<a ng-click="predicate='created'; reverse=!reverse"><i class="glyphicon glyphicon-sort"></i></a></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="item in filtered = (brands | filter:search | orderBy : predicate :reverse) | startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit">
+                            <td>{{item.id}}</td>
+                            <td>{{item.name}}</td>
+                            <td>{{item.ru}}</td>
+                            <td>{{item.ua}}</td>
+                            <td>{{item.en}}</td>
+                            <td>{{item.url}}</td>
+                            <td>{{item.created}}</td>
+                        </tr>
+                        </tbody>
+                        <!--</tfoot>-->
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+</div>

@@ -1,0 +1,151 @@
+<div ng-app="wifi" ng-controller="ClientSessionsController">
+    <h1>Sessions</h1>
+    <h3>Client's Info: {{sessions[0].clientMAC}}</h3>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Info</h4>
+                            <table class="table">
+                                <tbody>
+                                    <!-- <tr><td>Device vendor</td><td><strong>{{vendor}}</strong></td></tr> -->
+                                    <!--                                     <div class="col-md-4" ng-show="sessions !=null">
+                                        <h5>Gefunden {{totalItems}} Sessions</h5>
+                                    </div> -->
+                                    <tr>
+                                        <td>Number of sessions</td>
+                                        <td><strong>{{numSessions}}</strong></td>
+                                    </tr>
+                                    <!--                                     <tr>
+                                        <td>Number of usages</td>
+                                        <td><strong>{{numUsages}}</strong> <small>sessions with at least 10 minutes in between</small></td>
+                                    </tr> -->
+                                    <tr>
+                                        <td>Traffic total</td>
+                                        <td><strong>{{ trafficIn | number:2 }} MB in / {{ trafficOut  | number:2 }} MB out</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Loginprofiles used</td>
+                                        <td>
+                                            <ul class="list-unstyled">
+                                                <li ng-repeat="product in usedProducts"><strong>{{product}}</strong></li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>User-Agents</td>
+                                        <td>
+                                            <ul class="list-unstyled">
+                                                <li ng-repeat="ua in uas"><strong>{{ua}}</strong></li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!--                         <div class="col-md-3">Suchen:
+                            <input type="text" ng-model="search" id="search" placeholder="Client MAC-Adresse" class="form-control" />
+                            <br/>
+                            <button type="button" class="btn btn-warning btn-sm pull-right" ng-click="Search()">Suchen</button>
+                        </div> -->
+                    </div>
+                    <br/>
+                    <div style="font-size: 0.9em"><span class="glyphicon glyphicon-ok"></span> Auto-Login | <span class="glyphicon glyphicon-user"></span> LoginProfile active | <span class="glyphicon glyphicon-home"></span> via GRE | <span class="glyphicon glyphicon-globe"></span> via Cisco</div>
+                    <div class="row">
+                        <div class="col-md-12" ng-show="totalItems > 0">
+                            <table class="table table-hover table-bordered table-striped" bs-table>
+                                <thead>
+                                    <tr>
+                                        <th style="width: 16px"></th>
+                                        <th style="width: 16px"></th>
+                                        <th style="width: 16px"></th>
+                                        <th>IP-Adresse&nbsp;</th>
+                                        <th>SessionID&nbsp;</th>
+                                        <th>Duration</th>
+                                        <th>LP&nbsp;</th>
+                                        <th>Login Type</th>
+                                        <th>Customer&nbsp;</th>
+                                        <th>Username&nbsp;</th>
+                                        <th>AP MAC-Adresse</th>
+                                        <th>SpotID&nbsp;</th>
+                                        <th>SSID&nbsp;</th>
+                                        <th>Octets In | Out</th>
+                                        <th>Session Manager | nasPort</th>
+                                        <th style="width:10%">Start&nbsp;<a ng-click="predicate='sessions.start'; reverse=!reverse"><i class="glyphicon glyphicon-sort"></i></a></th>
+                                        <th style="width:10%">Stop&nbsp;<a ng-click="predicate='sessions.stop'; reverse=!reverse"><i class="glyphicon glyphicon-sort"></i></a></th>
+                                        <!--<th style="width:15%">User Agent</th>-->
+                                        <!--<th>At|au|gn|pc&nbsp;<a ng-click="predicate='at'; reverse=!reverse"><i class="glyphicon glyphicon-sort"></i></a></th>-->
+                                        <!--<th style="width:10%">Info</th>-->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="session in sessions">
+                                        <td>
+                                            <span class="glyphicon" ng-class="{ 'glyphicon-share-alt': session.loginType == 2, 'glyphicon-ok': session.loginType == 1 }"></span>
+                                        </td>
+                                        <td>
+                                            <span ng-if="session.lpId" class="glyphicon glyphicon-user"></span>
+                                        </td>
+                                        <td>
+                                            <span class="glyphicon" ng-class="{ 'glyphicon-home': session.technology == 'gre', 'glyphicon-globe': session.technology == 'cisco' }"></span>
+                                        </td>
+                                        <td>{{session.clientIP}}</td>
+                                        <td>{{session.sessionId}}</td>
+                                        <td>{{session.duration}}</td>
+                                        <td>{{session.lpId}}</td>
+                                        <td>{{session.loginType}}</td>
+                                        <td>{{session.customerId}}</td>
+                                        <td>{{session.username}}</td>
+                                        <td><a href="#/ap/clients/list/{{session.apMAC}}">{{session.apMAC}}</a></td>
+                                        <td>{{session.apID}}</td>
+                                        <td>{{session.ssid}}</td>
+                                        <td>{{session.octetsIn}} | {{session.octetsOut}}</td>
+                                        <td>{{session.nasIP}} {{session.nasPort}}</td>
+                                        <td>{{session.start}}</td>
+                                        <td>{{session.stop}}</td>
+                                        <td>{{point.session.status}}</td>
+                                        <!--<td>{{point.device.userAgent}}</td>-->
+                                        <!--<td>{{point.at}} {{point.au}} {{point.gn}} {{point.pc}}</td>-->
+                                        <!--<td class="action-column">
+                                            <button type="button" class="btn btn-info btn-sm" ng-click="Manage(point.spotId)">Info</button>
+                                        </td>-->
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div>
+                                <google-map ng-if="bounds" bounds="bounds" center="center" zoom="12" draggable="true">
+                                    <marker ng-repeat="marker in markers" coords="marker" position="{{marker}}" click="showInfoWindow(event, marker, google-map)"></marker>
+                                    <!--                           <info-window id="marker-info">
+                                        <div ng-non-bindable="">
+                                            <h5>{{marker.apMAC}}</h5>
+                                        </div>
+                                    </info-window> -->
+
+             <!--                        <info-window id="foo-iw">
+                                        <div ng-non-bindable="">
+                                            id: {{vm.shop.apMAC}}
+                                            <br/> name: {{vm.shop.name}}
+                                            <br/> Position 1: {{vm.shop.position}}
+                                            <br/> Position 2: {{anchor.getPosition()}}
+                                            <br/> Position 3: {{vm.map.markers[vm.shop.id].getPosition()}}
+                                            <br/>
+                                            <a href="#" ng-click="vm.clicked()">Click Here</a>
+                                        </div> 
+                                        </info-window>-->
+                                    
+                                </google-map>
+                            </div>
+                        </div>
+                        <div class="col-md-12" ng-show="totalItems == 0">
+                            <div class="col-md-12">
+                                <h4>Es wurden keine Sessions gefunden...</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

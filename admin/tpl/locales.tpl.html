@@ -1,0 +1,104 @@
+<div ng-app="akva" ng-controller="LocalesController">
+    <h1>Язык</h1>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <div class="row">
+                        <div class="col-md-2">Размер страницы:
+                            <select ng-model="entryLimit" class="form-control">
+                                <option>5</option>
+                                <option>10</option>
+                                <option>20</option>
+                                <option>50</option>
+                                <option>100</option>
+                                <option>200</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">Фильтр:
+                            <input type="text" ng-model="search" ng-change="filter()" placeholder="Поиск текста..." class="form-control" />
+                        </div>
+                        <div class="col-md-4">
+                            <h5>Найдено {{ filtered.length }} из {{ totalItems}} товаров</h5>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span><span ng-if="recentLoading">загрузка</span>Страница {{(currentPage )}} </span>
+                        <button class="btn btn-primary btn-xs" ng-class="{ 'disabled': currentPage <= 0 }" ng-click="setPage(currentPage - 1)"><span class="glyphicon glyphicon-chevron-left"></span></button>
+                        <button class="btn btn-primary btn-xs" ng-click="setPage(currentPage + 1)"><span class="glyphicon glyphicon-chevron-right"></span></button>
+                    </div>
+                    <div class="col-md-12" ng-show="filteredItems > 0">
+                        <div pagination="" page="currentPage" on-select-page="setPage(page)" boundary-links="true" total-items="filteredItems" items-per-page="entryLimit" class="pagination-small" previous-text="&laquo;" next-text="&raquo;"></div>
+                    </div>
+                    <br />
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="allItems" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th id="1">ID<a ng-click="predicate='id'; reverse=!reverse"><i class="glyphicon glyphicon-sort"></i></a> </th>
+                                <th id="2">LocaleKey&nbsp;<a ng-click="predicate='name'; reverse=!reverse"><i class="glyphicon glyphicon-sort"></i></a> </th>
+                                <th id="3">русский&nbsp;<a ng-click="predicate='ru'; reverse=!reverse"><i class="glyphicon glyphicon-sort"></i></a> </th>
+                                <th id="4">английский&nbsp;<a ng-click="predicate='en'; reverse=!reverse"><i class="glyphicon glyphicon-sort"></i></a> </th>
+                                <th id="5">Украина&nbsp;<a class="editable-cell" ng-click="predicate='ua'; reverse=!reverse"><i class="glyphicon glyphicon-sort"></i></a></th>
+                                <th id="6">Германия<a ng-click="predicate='de'; reverse=!reverse"><i class="glyphicon glyphicon-sort"></i></a></th>
+                                <th id="7">Франция&nbsp;<a ng-click="predicate='fr'; reverse=!reverse"><i class="glyphicon glyphicon-sort"></i></a>
+                                <th id="8">Portugues<a ng-click="predicate='pl'; reverse=!reverse"><i class="glyphicon glyphicon-sort"></i></a>
+                                <th id="9" style="width:5%">Редактировать</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in filtered = (products | filter:search | orderBy : predicate :reverse) | startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit">
+                                <td>{{item.id}}</td>
+                                <td>{{item.name}}</td>
+                                <td>
+                                    <div ng-hide="editingData[item.id]">{{item.ru}}</div>
+                                    <div ng-show="editingData[item.id]">
+                                        <textarea style="width:100%" ng-model="item.ru"></textarea>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div ng-hide="editingData[item.id]">{{item.en}}</div>
+                                    <div ng-show="editingData[item.id]">
+                                        <textarea style="width:100%" ng-model="item.en"></textarea>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div ng-hide="editingData[item.id]">{{item.ua}}</div>
+                                    <div ng-show="editingData[item.id]">
+                                        <textarea style="width:100%" ng-model="item.ua"></textarea>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div ng-hide="editingData[item.id]">{{item.de}}</div>
+                                    <div ng-show="editingData[item.id]">
+                                        <textarea style="width:100%" ng-model="item.de"></textarea>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div ng-hide="editingData[item.id]">{{item.fr}}</div>
+                                    <div ng-show="editingData[item.id]">
+                                        <textarea style="width:100%" ng-model="item.fr"></textarea>
+                                    </div>
+                                <td>
+                                    <div ng-hide="editingData[item.id]">{{item.pl}}</div>
+                                    <div ng-show="editingData[item.id]">
+                                        <textarea style="width:100%" ng-model="item.pl"></textarea>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button ng-hide="editingData[item.id]" class="btn btn-warning btn-sm" ng-click="modify(item)">Изменить</button>
+                                    <button ng-show="editingData[item.id]" class="btn btn-success btn-sm" ng-click="update(item)">Обновить</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+</div>
